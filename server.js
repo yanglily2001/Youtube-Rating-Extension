@@ -53,8 +53,38 @@ app.post('/submitRating', async (req, res) => {
 
 app.get('/viewData', async (req, res) => {
   try {
-    const data = await VideoRating.findAll();
+    const sortField = req.query.sortField || 'id'; // Default sort by 'id'
+    const sortOrder = req.query.sortOrder || 'asc'; // Default sort order 'asc'
+    if (!['id', 'rating'].includes(sortField)) {
+      return res.status(400).send('Invalid sort field. Must be "id" or "rating".');
+    }
+    if (!['asc', 'desc'].includes(sortOrder)) {
+      return res.status(400).send('Invalid sort order. Must be "asc" or "desc".');
+    }
+    const data = await VideoRating.findAll({
+      order: [
+        [sortField, sortOrder.toUpperCase()],
+      ]
+    });
     let html = '<!DOCTYPE html><html><head><title>View Data</title></head><body>';
+    html += `
+    <select id="sortField">
+      <option value="id">ID</option>
+      <option value="rating">Rating</option>
+    </select>
+    <select id="sortOrder">
+      <option value="asc">Ascending</option>
+      <option value="desc">Descending</option>
+    </select>
+    <button onclick="sortData()">Sort</button>
+    <script>
+      function sortData() {
+        const sortField = document.getElementById('sortField').value;
+        const sortOrder = document.getElementById('sortOrder').value;
+        window.location.href = '/viewData?sortField=' + sortField + '&sortOrder=' + sortOrder;
+      }
+    </script>
+    `;
     html += '<table border="1"><tr><th>Number</th><th>Video URL</th><th>Rating</th><th>Delete?</th></tr>';
     data.forEach((item, index) => {
       html += `<tr>
@@ -115,7 +145,7 @@ app.get('/viewData', async (req, res) => {
   }
 });
 
-app.post('/updateRating', async (req, res) => {
+ app.post('/updateRating', async (req, res) => {
   try {
     const { id, rating } = req.body;
     await VideoRating.update({ rating }, { where: { id } });
