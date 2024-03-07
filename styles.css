@@ -1,0 +1,19 @@
+/* styles.css */
+body {
+  width: 200px;
+  padding: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.input-container {
+  margin-bottom: 20px;
+}
+
+input {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+button {
+  width: 100%;
+}

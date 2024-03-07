@@ -1,0 +1,40 @@
+This application is a YouTube Rating Extension that allows users to submit ratings for YouTube videos and view all submitted ratings. It consists of a backend server built with Node.js and Express, using Sequelize Object Relational Mapper (ORM, or software mapping code objects to database) to interact with an SQLite database for storing video URLs and their associated ratings. The frontend is a Chrome extension that provides a user interface for submitting ratings and viewing the database entries.
+
+This project uses Sequelize, which is a promise-based Node.js ORM for Node.js supporting various SQL databases. The project uses SQLite, a C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine. The SQLite database uses SQL (Structured Query Language) for querying and managing the database.
+
+Backend (Node.js/Express and Sequelize)
+
+Server Setup: Utilizes Express.js for handling HTTP requests and Sequelize for ORM operations with an SQLite database.
+Database Model: Defines a VideoRating model with fields for videoURL and rating.
+Endpoints:
+POST /submitRating: Allows submission of a new rating for a video URL.
+GET /viewData: Fetches and returns all entries from the database.
+
+
+Frontend (Chrome Extension)
+
+Popup UI: Provides input fields for users to enter a YouTube video URL and a rating, and buttons to submit this data or view all ratings.
+JavaScript Logic:
+Handles the submission of ratings to the backend.
+Opens a new browser tab to http://localhost:3000/viewData when the "View Data" button is clicked, displaying all submitted ratings.
+
+
+Key Files and Their Roles
+
+server.js: Contains the backend logic, including database setup and route handlers.
+
+popup.html and popup.js: Define the Chrome extension's user interface and its interactions with the backend.
+
+background.js: Handles sending the rating data from the extension popup to the backend server.
+
+models.js: Defines the Sequelize model for the video ratings.
+
+manifest.json: Configures the Chrome extension, including permissions and background scripts.
+
+styles.css: Provides styling for the extension's popup UI.
+
+This application demonstrates a full-stack JavaScript project integrating a Node.js backend with a Chrome extension frontend, showcasing CRUD operations (Create and Read, with potential for Update and Delete) on a simple database.
+
+Use "npm rebuild sqlite3" then "node server.js" command in terminal to run
+Example of CURL request that can be made in Terminal:
+curl -X POST http://localhost:3000/submitRating -H "Content-Type: application/json" -d '{"videoURL": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "rating": 5}'
