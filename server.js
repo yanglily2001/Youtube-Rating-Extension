@@ -35,21 +35,26 @@ app.get('/', (req, res) => {
 });
 
 app.post('/submitRating', async (req, res) => {
-  try {
-    const { videoURL, rating } = req.body;
-
-    await VideoRating.create({
-      videoURL: videoURL, 
-      rating: rating,
-    });
-
-    res.json({ success: true, message: 'Rating submitted successfully.' });
-  } catch (error) {
-
-    console.error('Error submitting rating:', error.message);
-    res.status(500).json({ success: false, message: 'Error submitting rating.' });
-  }
-});
+    try {
+      const { videoURL, rating } = req.body;
+  
+      let existingRating = await VideoRating.findOne({ where: { videoURL } });
+      if (existingRating) {
+        existingRating.rating = rating;
+        await existingRating.save();
+        res.json({ success: true, message: 'Rating updated successfully.' });
+      } else {
+        await VideoRating.create({
+          videoURL: videoURL, 
+          rating: rating,
+        });
+        res.json({ success: true, message: 'Rating submitted successfully.' });
+      }
+    } catch (error) {
+      console.error('Error submitting rating:', error.message);
+      res.status(500).json({ success: false, message: 'Error submitting rating.' });
+    }
+  });
 
 app.get('/viewData', async (req, res) => {
   try {
