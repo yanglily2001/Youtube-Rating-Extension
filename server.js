@@ -98,7 +98,6 @@ app.get('/viewData', async (req, res) => {
                       <td>${item.videoURL}</td>
                       <td>
                           <input type="number" value="${item.rating}" id="rating-${item.id}" />
-                          <button onclick="updateRating(${item.id})">Update</button>
                       </td>
                       <td>
                           <button onclick="deleteRow(${item.id}, this)">Delete</button>
